@@ -35,6 +35,9 @@ app.MapPost("/subscribe", async ([FromBody]SubscribeRequest request, AppDbContex
 {
     if (await dbContext.Users.AnyAsync(u => u.Email == request.Email || u.Name == request.Name))
         return Results.Conflict("Użytkownik o podanej nazwie lub adresie email już istnieje");
+    
+    if(string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrEmpty(request.Name))
+        return Results.BadRequest("Nazwa użytkownika oraz email nie mogą być puste");
 
     var user = new User()
     {
