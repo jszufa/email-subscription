@@ -1,0 +1,53 @@
+.Form-wrapper {
+    background: #fff;
+    padding: 40px;
+    width: 100%;
+    max-width: 500px;
+    min-width: 200px;
+    border-radius: 10px;
+    text-align: center; 
+}
+
+.Form-wrapper header h1 {
+    font-size: 230%;
+    margin-top: 0;
+}
+
+#SubscriptionForm {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+#SubscriptionForm input[type="text"],
+#SubscriptionForm input[type="email"] {
+    border: unset;
+    background-color: #e4eff8;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 50px;
+    width: 100%;
+}
+
+#SubscriptionForm .Submit-button {
+    background-color: #0575E6;
+    color: #fff;
+    border: unset;
+    width: 100%;
+    border-radius: 50px;
+    padding: 15px;
+    cursor: pointer;
+    margin-top: 16px;
+    font-size: 1rem;
+}
+
+.success {
+    color: green;
+}
+.error {
+    color: red;
+}
+
