@@ -1,6 +1,7 @@
 using EmailSubscription.Api;
 using EmailSubscription.Api.Models;
 using EmailSubscription.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +31,7 @@ app.MapGet("/groups", async (AppDbContext dbContext) =>
     return groups.Count == 0 ? Results.NoContent() : Results.Ok(groups);
 });
 
-app.MapPost("/subscribe", async (SubscribeRequest request, AppDbContext dbContext, EmailService service) =>
+app.MapPost("/subscribe", async ([FromBody]SubscribeRequest request, AppDbContext dbContext, EmailService service) =>
 {
     if (await dbContext.Users.AnyAsync(u => u.Email == request.Email || u.Name == request.Name))
         return Results.Conflict("Użytkownik o podanej nazwie lub adresie email już istnieje");
@@ -49,7 +50,8 @@ app.MapPost("/subscribe", async (SubscribeRequest request, AppDbContext dbContex
 
     await service.SendEmailAsync(user.Email, user.Name, "Witaj w EmailSubscriptionApp",
         "Twój adres e-mail został pomyślnie zarejestrowany.");
-    return Results.Ok();
+    
+    return Results.Ok("Twój adres e-mail został pomyślnie zarejestrowany.");
 });
 
 app.MapPost("/send-to-group", async (EmailService service, AppDbContext dbContext, string groupName = "Grupa Niebieska") =>

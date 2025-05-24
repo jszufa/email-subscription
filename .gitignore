@@ -1,3 +1,6 @@
+/email-subscription-client/node_modules
+/email-subscription-client/build
+
 EmailSubscription.Api/appsettings.Development.json
 
 ## Ignore Visual Studio temporary files, build results, and
