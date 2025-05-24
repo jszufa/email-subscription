@@ -100,14 +100,14 @@ function SubscripitonForm() {
                 <input
                     type="text"
                     name="Name"
-                    placeholder="Enter name"
+                    placeholder="Podaj nazwę użytkownika"
                     onChange={handleInputChange}
                     value={formData.Name || ''}
                 />
                 <input
                     type="email"
                     name="Email"
-                    placeholder="Enter email"
+                    placeholder="Podaj adres email"
                     onChange={handleInputChange}
                     value={formData.Email || ''}
                 />
