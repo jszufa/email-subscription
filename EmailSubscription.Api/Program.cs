@@ -1,6 +1,7 @@
 using EmailSubscription.Api;
 using EmailSubscription.Api.Models;
 using EmailSubscription.Data;
+using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<AppDbContext>();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
-builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddTransient<ISmtpClient, SmtpClient>();
 
 
 var app = builder.Build();
@@ -31,7 +33,7 @@ app.MapGet("/groups", async (AppDbContext dbContext) =>
     return groups.Count == 0 ? Results.NoContent() : Results.Ok(groups);
 });
 
-app.MapPost("/subscribe", async ([FromBody]SubscribeRequest request, AppDbContext dbContext, EmailService service) =>
+app.MapPost("/subscribe", async ([FromBody]SubscribeRequest request, AppDbContext dbContext, EmailService service, ISmtpClient smtp) =>
 {
     if (await dbContext.Users.AnyAsync(u => u.Email == request.Email || u.Name == request.Name))
         return Results.Conflict("Użytkownik o podanej nazwie lub adresie email już istnieje");
@@ -52,12 +54,12 @@ app.MapPost("/subscribe", async ([FromBody]SubscribeRequest request, AppDbContex
     await dbContext.SaveChangesAsync();
 
     await service.SendEmailAsync(user.Email, user.Name, "Witaj w EmailSubscriptionApp",
-        "Twój adres e-mail został pomyślnie zarejestrowany.");
+        "Twój adres e-mail został pomyślnie zarejestrowany.", smtp);
     
     return Results.Ok("Twój adres e-mail został pomyślnie zarejestrowany.");
 });
 
-app.MapPost("/send-to-group", async (EmailService service, AppDbContext dbContext, string groupName = "Grupa Niebieska") =>
+app.MapPost("/send-to-group", async (EmailService service, AppDbContext dbContext, ISmtpClient smtp, string groupName = "Grupa Niebieska") =>
 {
     var subject = "Default subject";
     var message = "Lorem ipsum";
@@ -70,21 +72,21 @@ app.MapPost("/send-to-group", async (EmailService service, AppDbContext dbContex
         return Results.NotFound("Grupa nie istnieje");
 
     var tasks = group.Users.Select(user =>
-        service.SendEmailAsync(user.Email, user.Name ?? "", subject, message));
+        service.SendEmailAsync(user.Email, user.Name ?? "", subject, message, smtp));
 
     await Task.WhenAll(tasks);
 
     return Results.Ok("Wiadomości zostały wysłane.");
 });
 
-app.MapPost("/send-to-all", async (EmailService service, AppDbContext dbContext) =>
+app.MapPost("/send-to-all", async (EmailService service, AppDbContext dbContext, ISmtpClient smtp) =>
 {
     var users = await dbContext.Users.ToListAsync();
     if (users.Count == 0)
         return Results.NotFound("Nie istnieje żaden zarejestrowany użytkownik.");
     
     var tasks = users.Select(user =>
-        service.SendEmailAsync(user.Email, user.Name ?? "", "Default subject", "Lorem ipsum"));
+        service.SendEmailAsync(user.Email, user.Name ?? "", "Default subject", "Lorem ipsum", smtp));
 
     await Task.WhenAll(tasks);
 

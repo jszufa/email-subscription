@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailSubscription.Api", "Em
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailSubscription.Data", "EmailSubscription.Data\EmailSubscription.Data.csproj", "{462D652D-AFC7-44FE-BA27-8F5BABEE92E9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{9B538008-ACB6-48F8-B540-917DD9ED4E33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{462D652D-AFC7-44FE-BA27-8F5BABEE92E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{462D652D-AFC7-44FE-BA27-8F5BABEE92E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{462D652D-AFC7-44FE-BA27-8F5BABEE92E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B538008-ACB6-48F8-B540-917DD9ED4E33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B538008-ACB6-48F8-B540-917DD9ED4E33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B538008-ACB6-48F8-B540-917DD9ED4E33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B538008-ACB6-48F8-B540-917DD9ED4E33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
